@@ -17,8 +17,8 @@ namespace UnitTest1
 		{
 			ToDoData * d = new ToDoData("Title", "Description");
 
-			Assert::AreEqual(d->getTitle().compare(string("Title")), 0);
-			Assert::AreEqual(d->getDescription().compare(string("Description")), 0);
+			Assert::AreEqual(0, d->getTitle().compare(string("Title")));
+			Assert::AreEqual(0, d->getDescription().compare(string("Description")));
 		};
 
 		TEST_METHOD(TestToDoDataConstructionDate)
@@ -53,8 +53,8 @@ namespace UnitTest1
 			tddb->add(new ToDoData("Title", "Description"));		
 			ToDoData * d = tddb->getEntryAt(0);
 			
-			Assert::AreEqual(d->getTitle().compare(string("Title")), 0);
-			Assert::AreEqual(d->getDescription().compare(string("Description")), 0);
+			Assert::AreEqual(0, d->getTitle().compare(string("Title")));
+			Assert::AreEqual(0, d->getDescription().compare(string("Description")));
 		}
 
 		TEST_METHOD(TestDatabaseGetAll)
@@ -64,7 +64,7 @@ namespace UnitTest1
 			tddb->add(new ToDoData("Title2", "Description2"));	
 			vector<ToDoData *> d = tddb->getAllEntries();
 			
-			Assert::AreEqual(d.size(), size_t(2));
+			Assert::AreEqual(size_t(2), d.size());
 		}
 
 		TEST_METHOD(TestDatabaseRemove)
@@ -73,7 +73,7 @@ namespace UnitTest1
 			tddb->add(new ToDoData("Title", "Description"));		
 			tddb->removeEntryAt(0);
 			
-			Assert::AreEqual(tddb->getEntryCount(), 0);
+			Assert::AreEqual(0, tddb->getEntryCount());
 		}
 
 		TEST_METHOD(TestDatabaseRemoveAll)
@@ -83,7 +83,7 @@ namespace UnitTest1
 			tddb->add(new ToDoData("Title2", "Description2"));		
 			tddb->removeAllEntries();
 			
-			Assert::AreEqual(tddb->getEntryCount(), 0);
+			Assert::AreEqual(0, tddb->getEntryCount());
 		}
 
 		TEST_METHOD(TestStringToData)
@@ -92,9 +92,32 @@ namespace UnitTest1
 			string testStr = "title description " + to_string((int)t);
 			ToDoData * data = ToDoData::stringToData(testStr);
 			
-			Assert::AreEqual(data->getTitle().compare("title"), 0);			
-			Assert::AreEqual(data->getDescription().compare("title"), 0);
-			Assert::AreEqual((int)data->getCreationTimeMillis(), (int)t);
+			Assert::AreEqual(0, data->getTitle().compare("title"));			
+			Assert::AreEqual(0, data->getDescription().compare("description"));
+			Assert::AreEqual((int)t, (int)data->getCreationTimeMillis());
+		}
+
+		TEST_METHOD(TestDataToString)
+		{			
+			time_t t = time(NULL);
+			ToDoData * data = new ToDoData("Title", "Description", t);
+			string str = ToDoData::dataToString(data);
+						
+			Assert::AreEqual(0, str.compare("Title Description " + to_string(t)));
+		}
+			
+		TEST_METHOD(TestDefaultPath)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase();
+
+			Assert::AreEqual(0, tddb->getPath().compare("data/tododatabase.txt"));
+		}
+
+		TEST_METHOD(TestSetPath)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase("data/test");
+
+			Assert::AreEqual(0, tddb->getPath().compare("data/test"));
 		}
 	};
 }

@@ -3,7 +3,6 @@
 #include <string>
 #include <ctime>
 #include <sstream>
-#include <iostream>
 
 using namespace std;
 
@@ -18,8 +17,9 @@ public:
 	string getDescription();
 	struct tm getCreationTime();
 	time_t getCreationTimeMillis();
-
+	
 	static ToDoData * stringToData(string str);
+	static string dataToString(ToDoData * data);
 
 private:
 	string m_title;

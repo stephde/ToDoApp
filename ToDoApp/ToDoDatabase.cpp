@@ -5,8 +5,14 @@
 ToDoDatabase::ToDoDatabase(void)
 {
 	m_dataVec = vector<ToDoData *>();
+	m_path = DEFAULTPATH;
 }
 
+ToDoDatabase::ToDoDatabase(string path)
+{
+	m_dataVec = vector<ToDoData *>();
+	m_path = path;
+}
 
 ToDoDatabase::~ToDoDatabase(void)
 {
@@ -41,13 +47,23 @@ void ToDoDatabase::removeAllEntries()
 	m_dataVec.clear();
 }
 
-
-void ToDoDatabase::loadData()
+string ToDoDatabase::getPath()
 {
-	loadDataFrom(DEFAULTPATH);
+	return m_path;
 }
 
-void ToDoDatabase::loadDataFrom(char * path)
+void ToDoDatabase::setPath(string path)
+{
+	m_path = path;
+}
+
+
+bool ToDoDatabase::loadData()
+{
+	return loadDataFrom(m_path);
+}
+
+bool ToDoDatabase::loadDataFrom(string path)
 {
 	string line;
 	ifstream file;
@@ -62,6 +78,38 @@ void ToDoDatabase::loadDataFrom(char * path)
 		}
 
 		file.close();
-	}else
+	}else{
 		cout << "Unable to open file at: " << path << endl;
+		return false;
+	}
+
+	return true;
+}
+
+bool ToDoDatabase::saveData()
+{
+	return saveDataTo(DEFAULTPATH);
+}
+
+bool ToDoDatabase::saveDataTo(string path)
+{
+	string line;
+	fstream file;
+	file.open(path, ios::app);
+
+	if(file.is_open()){
+		cout << "Saving to file at: " << path << endl;
+
+		for(vector<ToDoData *>::iterator it = m_dataVec.begin(); it != m_dataVec.end(); ++it)
+		{
+			file << ToDoData::dataToString(*it) << endl;
+		}
+
+		file.close();
+	}else{
+		cout << "Unable to open file at: " << path << endl;
+		return false;
+	}
+
+	return true;
 }
