@@ -12,7 +12,7 @@ class ToDoDatabase
 {
 public:
 	ToDoDatabase(void);
-	ToDoDatabase(string path);
+	ToDoDatabase(string path, string fileName);
 	virtual ~ToDoDatabase(void);
 
 	int getEntryCount();
@@ -31,6 +31,7 @@ public:
 
 	string extractNameFromPath(string path);
 	string getName();
+	void setName(string name);
 	static vector<string> splitStringAt(string sentence, char delim);
 
 private:

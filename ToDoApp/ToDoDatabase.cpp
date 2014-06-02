@@ -9,11 +9,11 @@ ToDoDatabase::ToDoDatabase(void)
 	m_name = DEFAULTNAME;
 }
 
-ToDoDatabase::ToDoDatabase(string path)
+ToDoDatabase::ToDoDatabase(string path, string fileName)
 {
 	m_dataVec = vector<ToDoData *>();
 	m_path = path;
-	m_name = extractNameFromPath(m_path);
+	m_name = extractNameFromPath(fileName);
 	loadDataFrom(m_path);
 
 }
@@ -66,12 +66,17 @@ string ToDoDatabase::getName()
 	return m_name;
 }
 
+void ToDoDatabase::setName(string name)
+{
+	m_name = name;
+}
+
 string ToDoDatabase::extractNameFromPath(string path)
 {
 	vector<string> pathParts = ToDoDatabase::splitStringAt(path, '/');
 
 	if(pathParts.size() > 0)
-		return pathParts.back();
+		return ToDoDatabase::splitStringAt(pathParts.back().c_str(), '.').begin()->c_str();
 
 	return DEFAULTNAME;
 }
@@ -92,7 +97,7 @@ vector<string> ToDoDatabase::splitStringAt(string sentence, char delim)
 
 bool ToDoDatabase::loadData()
 {
-	return loadDataFrom(m_path);
+	return loadDataFrom(m_path + m_name + ".txt");
 }
 
 bool ToDoDatabase::loadDataFrom(string path)
@@ -141,7 +146,7 @@ bool ToDoDatabase::loadDataFrom(fstream stream)
 
 bool ToDoDatabase::saveData()
 {
-	return saveDataTo(DEFAULTPATH);
+	return saveDataTo(m_path + m_name + ".txt");
 }
 
 bool ToDoDatabase::saveDataTo(string path)

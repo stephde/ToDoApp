@@ -25,12 +25,17 @@ public:
     bool loadDatabases();
     bool loadConfiguration();
     void addCategory();
-    void changeActiveCategoryTo(ToDoDatabase *tddb);
+    void changeActiveCategoryTo(int index);
+
+public slots:
+	void onCategoryNameChanged(QString name);
+	void onNextCategory();
+	void onPrevCategory();
 
 private:
     Ui::MainWindow *ui;
     vector<ToDoDatabase *> m_databases;
-    ToDoDatabase * m_curDatabase;
+    int m_curDatabaseIndex;
     hash_map<string, int> m_idDictionary;
 };
 

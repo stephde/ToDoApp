@@ -115,7 +115,7 @@ namespace UnitTest1
 
 		TEST_METHOD(TestSetPath)
 		{
-			ToDoDatabase * tddb = new ToDoDatabase("data/test");
+			ToDoDatabase * tddb = new ToDoDatabase("data/test", "");
 
 			Assert::AreEqual(0, tddb->getPath().compare("data/test"));
 		}
@@ -146,8 +146,9 @@ namespace UnitTest1
 			ToDoDatabase * tddb = new ToDoDatabase();
 			Assert::AreEqual(0, tddb->getName().compare(DEFAULTNAME));
 			
-			tddb = new ToDoDatabase("../aPath/aDatabaseName");
+			tddb = new ToDoDatabase("../aPath/", "aDatabaseName.txt");
 			Assert::AreEqual(0, tddb->getName().compare("aDatabaseName"));
 		}
+
 	};
 }
