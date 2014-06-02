@@ -7,6 +7,9 @@
 #include "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\dirent.h"
 
 #include "../../../ToDoApp/ToDoApp/ToDoDatabase.h"
+#include <string>
+
+#define DEFAULTDATAPATH "../data/"
 
 namespace Ui {
 class MainWindow;
@@ -22,7 +25,7 @@ public:
     bool loadDatabases();
     bool loadConfiguration();
     void addCategory();
-    void changeCategoryTo();
+    void changeActiveCategoryTo(ToDoDatabase *tddb);
 
 private:
     Ui::MainWindow *ui;

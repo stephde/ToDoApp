@@ -133,5 +133,21 @@ namespace UnitTest1
 
 			Assert::AreEqual(false, tddb->loadDataFrom(fstream()));
 		}
+
+		TEST_METHOD(TestSplitString)
+		{
+			string testString = "Das ist ein Test";
+
+			Assert::AreEqual(0, ToDoDatabase::splitStringAt(testString, ' ').back().compare("Test"));
+		}
+
+		TEST_METHOD(TestExtractNameFromPath)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase();
+			Assert::AreEqual(0, tddb->getName().compare(DEFAULTNAME));
+			
+			tddb = new ToDoDatabase("../aPath/aDatabaseName");
+			Assert::AreEqual(0, tddb->getName().compare("aDatabaseName"));
+		}
 	};
 }

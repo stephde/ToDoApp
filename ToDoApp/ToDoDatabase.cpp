@@ -6,13 +6,16 @@ ToDoDatabase::ToDoDatabase(void)
 {
 	m_dataVec = vector<ToDoData *>();
 	m_path = DEFAULTPATH;
+	m_name = DEFAULTNAME;
 }
 
 ToDoDatabase::ToDoDatabase(string path)
 {
 	m_dataVec = vector<ToDoData *>();
 	m_path = path;
-	loadData();
+	m_name = extractNameFromPath(m_path);
+	loadDataFrom(m_path);
+
 }
 
 ToDoDatabase::~ToDoDatabase(void)
@@ -56,6 +59,34 @@ string ToDoDatabase::getPath()
 void ToDoDatabase::setPath(string path)
 {
 	m_path = path;
+}
+
+string ToDoDatabase::getName()
+{
+	return m_name;
+}
+
+string ToDoDatabase::extractNameFromPath(string path)
+{
+	vector<string> pathParts = ToDoDatabase::splitStringAt(path, '/');
+
+	if(pathParts.size() > 0)
+		return pathParts.back();
+
+	return DEFAULTNAME;
+}
+
+vector<string> ToDoDatabase::splitStringAt(string sentence, char delim)
+{
+	vector<string> vec;
+
+	stringstream sstream(sentence);
+	string item;
+
+	while(getline(sstream, item, delim))
+		vec.push_back(item);
+
+	return vec;
 }
 
 

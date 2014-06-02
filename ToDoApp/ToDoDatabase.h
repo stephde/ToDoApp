@@ -6,6 +6,7 @@
 #include <fstream>
 
 #define DEFAULTPATH "data/tododatabase.txt"
+#define DEFAULTNAME "EmptyDatabase"
 
 class ToDoDatabase
 {
@@ -28,9 +29,13 @@ public:
 	bool saveData();
 	bool saveDataTo(string path);
 
+	string extractNameFromPath(string path);
+	string getName();
+	static vector<string> splitStringAt(string sentence, char delim);
 
 private:
 	vector<ToDoData *> m_dataVec;
 	string m_path;
+	string m_name;
 };
 
