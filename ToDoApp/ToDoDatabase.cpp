@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "ToDoDatabase.h"
 
 
@@ -12,6 +12,7 @@ ToDoDatabase::ToDoDatabase(string path)
 {
 	m_dataVec = vector<ToDoData *>();
 	m_path = path;
+	loadData();
 }
 
 ToDoDatabase::~ToDoDatabase(void)
@@ -80,6 +81,27 @@ bool ToDoDatabase::loadDataFrom(string path)
 		file.close();
 	}else{
 		cout << "Unable to open file at: " << path << endl;
+		return false;
+	}
+
+	return true;
+}
+
+bool ToDoDatabase::loadDataFrom(fstream stream)
+{
+	string line;
+
+	if(stream.is_open()){
+		cout << "Reading from file at: " << stream << endl;
+
+		while( getline(stream, line))
+		{
+			add(ToDoData::stringToData(line));
+		}
+
+		stream.close();
+	}else{
+		cout << "Unable to open file at: " << stream << endl;
 		return false;
 	}
 

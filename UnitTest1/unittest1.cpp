@@ -119,5 +119,19 @@ namespace UnitTest1
 
 			Assert::AreEqual(0, tddb->getPath().compare("data/test"));
 		}
+
+		TEST_METHOD(TestLoadFromPath)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase();			
+
+			Assert::AreEqual(false, tddb->loadDataFrom("wrongPath..."));
+		}
+
+		TEST_METHOD(TestLoadFromFile)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase();
+
+			Assert::AreEqual(false, tddb->loadDataFrom(fstream()));
+		}
 	};
 }

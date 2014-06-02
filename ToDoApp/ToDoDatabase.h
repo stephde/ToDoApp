@@ -13,6 +13,7 @@ public:
 	ToDoDatabase(void);
 	ToDoDatabase(string path);
 	virtual ~ToDoDatabase(void);
+
 	int getEntryCount();
 	string getPath();
 	void setPath(string path);
@@ -23,6 +24,7 @@ public:
 	void removeAllEntries();
 	bool loadData();
 	bool loadDataFrom(string path);
+	bool loadDataFrom(fstream stream);
 	bool saveData();
 	bool saveDataTo(string path);
 
