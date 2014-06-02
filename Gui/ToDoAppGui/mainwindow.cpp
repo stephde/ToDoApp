@@ -15,6 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->lineEditCategory, SIGNAL(textChanged(QString)), this, SLOT(onCategoryNameChanged(QString)));
 	QObject::connect(ui->buttonNext, SIGNAL(clicked()), this, SLOT(onNextCategory()));
 	QObject::connect(ui->buttonPrevious, SIGNAL(clicked()), this, SLOT(onPrevCategory()));
+	
+	QObject::connect(ui->actionSave, SIGNAL(clicked()), this, SLOT(onSave()));
+	QObject::connect(ui->actionSaveTo, SIGNAL(clicked()), this, SLOT(onSaveTo()));
+	QObject::connect(ui->actionSaveAll, SIGNAL(clicked()), this, SLOT(onSaveAll()));
+
+	QObject::connect(ui->buttonAddItem, SIGNAL(clicked()), this, SLOT(onAddItem()));
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +75,45 @@ void MainWindow::changeActiveCategoryTo(int index)
 }
 
 
+QFrame* MainWindow::createNewItemFrom(ToDoData * data)
+{
+	QFrame * frame = new QFrame();
+	frame->setMaximumHeight(30);
+	QHBoxLayout * layout = new QHBoxLayout();
+	layout->setContentsMargins(5, 5, 5, 5);
+
+	//set max height to 20
+	layout->addWidget(new QLineEdit(QString(data->getTitle().c_str())));
+	layout->addWidget(new QLineEdit(QString(data->getCreationTime().tm_year)));
+	layout->addWidget(new QCheckBox());
+
+	frame->setLayout(layout);
+
+	return frame;
+}
+
+QFrame* MainWindow::createNewItem()
+{
+	QFrame * frame = new QFrame();
+	frame->setMaximumHeight(30);
+	QHBoxLayout * layout = new QHBoxLayout();
+	layout->setContentsMargins(5, 5, 5, 5);
+
+	//set max height to 20
+	layout->addWidget(new QLineEdit("lineEditTitle"));
+	layout->addWidget(new QLineEdit("lineEditDate"));
+	layout->addWidget(new QCheckBox());
+
+	frame->setLayout(layout);
+
+	return frame;
+}
+
+/****
+		Signals
+
+****/
+
 void MainWindow::onCategoryNameChanged(QString name)
 {
 	m_databases.at(m_curDatabaseIndex)->setName(name.toStdString());
@@ -88,4 +133,28 @@ void MainWindow::onPrevCategory()
 		changeActiveCategoryTo(m_curDatabaseIndex - 1);
 	else
 		changeActiveCategoryTo(m_databases.size() - 1);
+}
+
+
+void MainWindow::onSave()
+{
+	m_databases.at(m_curDatabaseIndex)->saveData();
+}
+
+void MainWindow::onSaveTo()
+{
+	//open path picker
+	//m_databases.at(m_curDatabaseIndex)->saveDataTo(path.toStdString());
+}
+
+void MainWindow::onSaveAll()
+{
+	for(int i=0; i<m_databases.size(); i++)
+		m_databases.at(i)->saveData();
+}
+
+
+void MainWindow::onAddItem()
+{
+	ui->groupBoxItems->layout()->addWidget(createNewItem());
 }

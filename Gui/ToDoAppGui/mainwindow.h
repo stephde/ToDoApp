@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFrame>
 
 #include <hash_map>
 #include "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\dirent.h"
@@ -22,21 +23,31 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
     bool loadDatabases();
     bool loadConfiguration();
     void addCategory();
     void changeActiveCategoryTo(int index);
+
+	QFrame * createNewItemFrom(ToDoData * data);
+	QFrame * createNewItem();
 
 public slots:
 	void onCategoryNameChanged(QString name);
 	void onNextCategory();
 	void onPrevCategory();
 
+	void onSave();
+	void onSaveAll();
+	void onSaveTo();
+
+	void onAddItem();
+
 private:
     Ui::MainWindow *ui;
     vector<ToDoDatabase *> m_databases;
     int m_curDatabaseIndex;
-    hash_map<string, int> m_idDictionary;
+    //hash_map<string, int> m_idDictionary;
 };
 
 #endif // MAINWINDOW_H

@@ -89,11 +89,12 @@ namespace UnitTest1
 		TEST_METHOD(TestStringToData)
 		{			
 			time_t t = time(NULL);
-			string testStr = "title description " + to_string((int)t);
+			string testStr = "title description 0 " + to_string((int)t);
 			ToDoData * data = ToDoData::stringToData(testStr);
 			
 			Assert::AreEqual(0, data->getTitle().compare("title"));			
 			Assert::AreEqual(0, data->getDescription().compare("description"));
+			Assert::AreEqual(false, data->isDone());
 			Assert::AreEqual((int)t, (int)data->getCreationTimeMillis());
 		}
 
@@ -103,7 +104,7 @@ namespace UnitTest1
 			ToDoData * data = new ToDoData("Title", "Description", t);
 			string str = ToDoData::dataToString(data);
 						
-			Assert::AreEqual(0, str.compare("Title Description " + to_string(t)));
+			Assert::AreEqual(0, str.compare("Title Description 0 " + to_string(t)));
 		}
 			
 		TEST_METHOD(TestDefaultPath)
