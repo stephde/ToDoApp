@@ -26,11 +26,17 @@ public:
 
     bool loadDatabases();
     bool loadConfiguration();
+	void loadItems();
     void addCategory();
+	void addItemForData(ToDoData * data);
     void changeActiveCategoryTo(int index);
+	void removeChildrenOf(QLayout * layout);
 
-	QFrame * createNewItemFrom(ToDoData * data);
-	QFrame * createNewItem();
+	static QFrame * createItemFrom(ToDoData * data);
+	static QFrame * createItem();
+	static QFrame * createItem(string title, string description, bool done);
+
+
 
 public slots:
 	void onCategoryNameChanged(QString name);

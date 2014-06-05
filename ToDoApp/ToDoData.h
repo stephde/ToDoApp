@@ -3,6 +3,7 @@
 #include <string>
 #include <ctime>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 

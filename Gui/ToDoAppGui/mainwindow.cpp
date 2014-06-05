@@ -64,6 +64,52 @@ bool MainWindow::loadDatabases()
     return true;
 }
 
+void MainWindow::removeChildrenOf(QLayout * layout)
+{
+	QLayoutItem* child;
+
+	if(layout)
+    while(layout->count()!=0)
+    {
+        child = layout->takeAt(0);
+        if(child->layout() != 0)
+        {
+            removeChildrenOf(child->layout());
+        }
+        else if(child->widget() != 0)
+        {
+            delete child->widget();
+        }
+
+        delete child;
+    }
+}
+
+void MainWindow::loadItems()
+{
+	//delete old Items
+	if(ui->scrollAreaItems != NULL)
+		removeChildrenOf(ui->scrollAreaItems->widget()->layout());
+
+	//load new Items
+	vector<ToDoData*> data = m_databases.at(m_curDatabaseIndex)->getAllEntries();
+
+	for(int i=0; i< data.size(); i++)
+	{
+		addItemForData(data.at(i));
+	}
+
+	//add spacer
+	QSpacerItem * spacer = new QSpacerItem(20,20, QSizePolicy::Expanding);
+	ui->scrollAreaItems->widget()->layout()->addItem(spacer);
+}
+
+void MainWindow::addItemForData(ToDoData* data)
+{
+	QVBoxLayout * layout = static_cast<QVBoxLayout*>(ui->scrollAreaItems->layout());
+
+	layout->insertWidget(0, MainWindow::createItemFrom(data));
+}
 
 void MainWindow::changeActiveCategoryTo(int index)
 {
@@ -72,10 +118,23 @@ void MainWindow::changeActiveCategoryTo(int index)
 	//load data into UI
 	ui->lineEditCategory->setText(m_databases.at(index)->getName().c_str());
 	//loadITems
+	loadItems();
 }
 
 
-QFrame* MainWindow::createNewItemFrom(ToDoData * data)
+QFrame* MainWindow::createItemFrom(ToDoData * data)
+{
+	return MainWindow::createItem(data->getTitle(), 
+								  data->getDescription(), 
+								  data->isDone());
+}
+
+QFrame* MainWindow::createItem()
+{
+	return MainWindow::createItem("lineEditTitle", "lineEditDate", false);
+}
+
+QFrame* MainWindow::createItem(string title, string description, bool done)
 {
 	QFrame * frame = new QFrame();
 	frame->setMaximumHeight(30);
@@ -83,26 +142,15 @@ QFrame* MainWindow::createNewItemFrom(ToDoData * data)
 	layout->setContentsMargins(5, 5, 5, 5);
 
 	//set max height to 20
-	layout->addWidget(new QLineEdit(QString(data->getTitle().c_str())));
-	layout->addWidget(new QLineEdit(QString(data->getCreationTime().tm_year)));
-	layout->addWidget(new QCheckBox());
-
-	frame->setLayout(layout);
-
-	return frame;
-}
-
-QFrame* MainWindow::createNewItem()
-{
-	QFrame * frame = new QFrame();
-	frame->setMaximumHeight(30);
-	QHBoxLayout * layout = new QHBoxLayout();
-	layout->setContentsMargins(5, 5, 5, 5);
-
-	//set max height to 20
-	layout->addWidget(new QLineEdit("lineEditTitle"));
-	layout->addWidget(new QLineEdit("lineEditDate"));
-	layout->addWidget(new QCheckBox());
+	QLineEdit * le = new QLineEdit(title.c_str());
+	le->setMaximumSize(QSize(1000,20));
+	layout->addWidget(le);
+	QLineEdit * le2 = new QLineEdit(description.c_str());
+	le2->setMaximumSize(QSize(100, 20));
+	layout->addWidget(le2);
+	QCheckBox * chb = new QCheckBox();
+	chb->setChecked(done);
+	layout->addWidget(chb);
 
 	frame->setLayout(layout);
 
@@ -156,5 +204,6 @@ void MainWindow::onSaveAll()
 
 void MainWindow::onAddItem()
 {
-	ui->groupBoxItems->layout()->addWidget(createNewItem());
+	QVBoxLayout *layout = static_cast<QVBoxLayout*>(ui->scrollAreaItems->widget()->layout());
+	layout->insertWidget(0, MainWindow::createItem());
 }

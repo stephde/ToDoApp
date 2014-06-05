@@ -103,8 +103,10 @@ namespace UnitTest1
 			time_t t = time(NULL);
 			ToDoData * data = new ToDoData("Title", "Description", t);
 			string str = ToDoData::dataToString(data);
-						
-			Assert::AreEqual(0, str.compare("Title Description 0 " + to_string(t)));
+
+			Logger::WriteMessage(str.c_str());
+
+			Assert::AreEqual(0, str.compare("Title Description false " + to_string(t)));
 		}
 			
 		TEST_METHOD(TestDefaultPath)

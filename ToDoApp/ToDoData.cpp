@@ -91,12 +91,17 @@ ToDoData * ToDoData::stringToData(string str)
 	return new ToDoData(title, description, ToDoData::stringToBool(isDone), time_t(atoi(millis.c_str())));
 }
 
+inline const string const BoolToString(bool b)
+{
+	return string(b ? "true" : "false");
+}
+
 string ToDoData::dataToString(ToDoData * data)
 {
 	string str = "";
 	str.append(data->getTitle() + " ");
 	str.append(data->getDescription() + " ");
-	str.append((int)data->isDone() + " ");
+	str.append(BoolToString(data->isDone()) + " ");
 	str.append(to_string(data->getCreationTimeMillis()));
 	return str;
 }
@@ -107,6 +112,9 @@ bool ToDoData::stringToBool(string value)
 		return false;
 	else if(value == "1" || value == "true" || value == "TRUE")
 		return true;
-	else
-		throw(new std::exception("Unsupported type encountered while parsing string to boolean!"));
+	else{
+		//throw(new std::exception("Unsupported type encountered while parsing string to boolean!"));
+		cout << "Unsupported type encountered while parsing string to boolean!";
+		return false;
+	}
 }
