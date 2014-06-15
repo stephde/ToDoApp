@@ -14,7 +14,7 @@ ToDoDatabase::ToDoDatabase(string path, string fileName)
 	m_dataVec = vector<ToDoData *>();
 	m_path = path;
 	m_name = extractNameFromPath(fileName);
-	loadDataFrom(m_path);
+	loadData();
 
 }
 

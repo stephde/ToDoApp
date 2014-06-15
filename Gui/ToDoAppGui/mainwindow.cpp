@@ -36,7 +36,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::loadDatabases()
 {
-    vector<string> * filesInDir = new vector<string>;;
+    vector<string> * filesInDir = new vector<string>;
 
     DIR *dir = opendir(DEFAULTDATAPATH);
     dirent *d;
@@ -72,7 +72,13 @@ void MainWindow::removeChildrenOf(QLayout * layout)
     while(layout->count()!=0)
     {
         child = layout->takeAt(0);
-        if(child->layout() != 0)
+		if(typeid(child) == typeid(QFrame))
+		{
+			qDeleteAll(child->widget()->layout()->children());
+			delete child;
+		}
+        
+		if(child->layout() != 0)
         {
             removeChildrenOf(child->layout());
         }
@@ -102,11 +108,12 @@ void MainWindow::loadItems()
 	//add spacer
 	QSpacerItem * spacer = new QSpacerItem(20,20, QSizePolicy::Expanding);
 	ui->scrollAreaItems->widget()->layout()->addItem(spacer);
+	ui->scrollAreaItems->update();
 }
 
 void MainWindow::addItemForData(ToDoData* data)
 {
-	QVBoxLayout * layout = static_cast<QVBoxLayout*>(ui->scrollAreaItems->layout());
+	QVBoxLayout * layout = static_cast<QVBoxLayout*>(ui->scrollAreaItems->widget()->layout());
 
 	layout->insertWidget(0, MainWindow::createItemFrom(data));
 }
