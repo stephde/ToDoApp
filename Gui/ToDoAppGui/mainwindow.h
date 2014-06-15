@@ -31,6 +31,7 @@ public:
 	void addItemForData(ToDoData * data);
     void changeActiveCategoryTo(int index);
 	void removeChildrenOf(QLayout * layout);
+	void saveItemsToCurDatabase();
 
 	static QFrame * createItemFrom(ToDoData * data);
 	static QFrame * createItem();

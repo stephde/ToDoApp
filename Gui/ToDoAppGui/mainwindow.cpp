@@ -118,8 +118,31 @@ void MainWindow::addItemForData(ToDoData* data)
 	layout->insertWidget(0, MainWindow::createItemFrom(data));
 }
 
+void MainWindow::saveItemsToCurDatabase()
+{
+	ToDoDatabase * curDB = m_databases.at(m_curDatabaseIndex);
+
+	curDB->removeAllEntries();
+	QLayout * layout = ui->scrollAreaWidgetContents->layout();
+	for(int i=0; i< layout->count(); i++)
+	{
+		QWidget * item = layout->itemAt(i)->widget();
+		if(dynamic_cast<QFrame *>(item))
+		{
+			QLayout * layout = item->layout();
+			curDB->add(new ToDoData(
+				static_cast<QLineEdit *>(layout->itemAt(0)->widget())->text().toStdString(),
+				static_cast<QLineEdit *>(layout->itemAt(1)->widget())->text().toStdString(),
+				static_cast<QCheckBox *>(layout->itemAt(2)->widget())->isChecked()));
+		}
+	}
+}
+
 void MainWindow::changeActiveCategoryTo(int index)
 {
+	saveItemsToCurDatabase();
+
+	//load new data
 	m_curDatabaseIndex = index;
 
 	//load data into UI
