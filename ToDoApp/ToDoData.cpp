@@ -47,27 +47,29 @@ ToDoData::~ToDoData(void)
 }
 
 
-string ToDoData::getTitle(){
-	
+string ToDoData::getTitle() const
+{	
 	return m_title;
 }
 
-string ToDoData::getDescription(){
-
+string ToDoData::getDescription() const
+{
 	return m_description;
 }
 
-struct tm ToDoData::getCreationTime(){
+struct tm ToDoData::getCreationTime() const
+{
 	struct tm tInfo;
 	localtime_s(&tInfo, &m_creationTime);
 	return tInfo;
 }
 
-time_t ToDoData::getCreationTimeMillis(){
+time_t ToDoData::getCreationTimeMillis() const
+{
 	return m_creationTime;
 }
 
-bool ToDoData::isDone()
+bool ToDoData::isDone() const
 {
 	return m_isDone;
 }
@@ -78,15 +80,31 @@ void ToDoData::toggleIsDone()
 }
 
 
-ToDoData * ToDoData::stringToData(string str)
+vector<string> ToDoData::splitStringAt(string sentence, const char delim)
 {
-	string title, description, isDone, millis;
+	vector<string> vec;
 
-	istringstream iss(str);
-	iss >> title;
-	iss >> description;
-	iss >> isDone;
-	iss >> millis;
+	stringstream sstream(sentence);
+	string item;
+
+	while(getline(sstream, item, delim))
+		vec.push_back(item);
+
+	return vec;
+}
+
+ToDoData * ToDoData::stringToData(const string str)
+{
+	string title = "", description = "", isDone = "", millis = "", tmp = "";
+	vector<string> vec = ToDoData::splitStringAt(str, ToDoData::getDelimiter());
+
+	if(vec.size() == 4)
+	{
+		title = vec.at(0);
+		description = vec.at(1);
+		isDone = vec.at(2);
+		millis = vec.at(3);
+	}
 
 	return new ToDoData(title, description, ToDoData::stringToBool(isDone), time_t(atoi(millis.c_str())));
 }
@@ -99,18 +117,18 @@ inline const string const BoolToString(bool b)
 string ToDoData::dataToString(ToDoData * data)
 {
 	string str = "";
-	str.append(data->getTitle() + " ");
-	str.append(data->getDescription() + " ");
-	str.append(BoolToString(data->isDone()) + " ");
+	str.append(data->getTitle() + ToDoData::getDelimiter());
+	str.append(data->getDescription() + ToDoData::getDelimiter());
+	str.append(BoolToString(data->isDone()) + ToDoData::getDelimiter());
 	str.append(to_string(data->getCreationTimeMillis()));
 	return str;
 }
 
 bool ToDoData::stringToBool(string value)
 {
-	if(value == "0" || value == "false" || value == "FALSE")
+	if(value == "0" || value == "false" || value == "FALSE" || value == "False")
 		return false;
-	else if(value == "1" || value == "true" || value == "TRUE")
+	else if(value == "1" || value == "true" || value == "TRUE" || value == "True")
 		return true;
 	else{
 		//throw(new std::exception("Unsupported type encountered while parsing string to boolean!"));

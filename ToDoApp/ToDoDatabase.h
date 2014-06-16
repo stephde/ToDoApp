@@ -15,12 +15,12 @@ public:
 	ToDoDatabase(string path, string fileName);
 	virtual ~ToDoDatabase(void);
 
-	int getEntryCount();
-	string getPath();
+	int getEntryCount() const;
+	string getPath() const;
 	void setPath(string path);
 	void add(ToDoData * data);
-	ToDoData * getEntryAt(int index);
-	vector<ToDoData *> getAllEntries();
+	ToDoData * getEntryAt(int index) const;
+	vector<ToDoData *> getAllEntries() const;
 	void removeEntryAt(int index);
 	void removeAllEntries();
 	bool loadData();
@@ -30,9 +30,11 @@ public:
 	bool saveDataTo(string path);
 
 	string extractNameFromPath(string path);
-	string getName();
+	string getName() const;
 	void setName(string name);
-	static vector<string> splitStringAt(string sentence, char delim);
+	static string getFileExtension(){
+		return ".txt";
+	}
 
 private:
 	vector<ToDoData *> m_dataVec;

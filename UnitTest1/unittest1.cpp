@@ -89,13 +89,29 @@ namespace UnitTest1
 		TEST_METHOD(TestStringToData)
 		{			
 			time_t t = time(NULL);
-			string testStr = "title description 0 " + to_string((int)t);
+			string testStr = "title|description|0|" + to_string((int)t);
 			ToDoData * data = ToDoData::stringToData(testStr);
 			
 			Assert::AreEqual(0, data->getTitle().compare("title"));			
 			Assert::AreEqual(0, data->getDescription().compare("description"));
 			Assert::AreEqual(false, data->isDone());
 			Assert::AreEqual((int)t, (int)data->getCreationTimeMillis());
+		}
+
+		TEST_METHOD(TestStringToDataMultipleWords)
+		{
+			string testStr = "multiple words title" + ToDoData::getDelimiterString() 
+							+ "multiple words description" + ToDoData::getDelimiterString() 
+							+ "1" + ToDoData::getDelimiterString() + "1234";
+			ToDoData * data = ToDoData::stringToData(testStr);
+
+			
+			Logger::WriteMessage(data->getTitle().c_str());
+			Logger::WriteMessage(data->getDescription().c_str());
+
+			Assert::AreEqual(0, data->getTitle().compare("multiple words title"));
+			Assert::AreEqual(0, data->getDescription().compare("multiple words description"));
+			Assert::AreEqual(true, data->isDone());
 		}
 
 		TEST_METHOD(TestDataToString)
@@ -106,7 +122,7 @@ namespace UnitTest1
 
 			Logger::WriteMessage(str.c_str());
 
-			Assert::AreEqual(0, str.compare("Title Description false " + to_string(t)));
+			Assert::AreEqual(0, str.compare("Title|Description|false|" + to_string(t)));
 		}
 			
 		TEST_METHOD(TestDefaultPath)
@@ -141,7 +157,7 @@ namespace UnitTest1
 		{
 			string testString = "Das ist ein Test";
 
-			Assert::AreEqual(0, ToDoDatabase::splitStringAt(testString, ' ').back().compare("Test"));
+			Assert::AreEqual(0, ToDoData::splitStringAt(testString, ' ').back().compare("Test"));
 		}
 
 		TEST_METHOD(TestExtractNameFromPath)

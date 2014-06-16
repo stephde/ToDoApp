@@ -4,6 +4,7 @@
 #include <ctime>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -16,14 +17,23 @@ public:
 	ToDoData(string title, string description, time_t millis);
 	ToDoData(string title, string description, bool isDone, time_t millis);
 	virtual ~ToDoData(void);
-	string getTitle();
-	string getDescription();
-	struct tm getCreationTime();
-	time_t getCreationTimeMillis();
-	bool isDone();
+	
+	string getTitle() const;
+	string getDescription() const;
+	struct tm getCreationTime() const;
+	time_t getCreationTimeMillis() const;
+	bool isDone() const;
 	void toggleIsDone();
 	
-	static ToDoData * stringToData(string str);
+	static char getDelimiter(){
+		return '|';
+	}
+	static string getDelimiterString(){
+		return "|";
+	}
+	
+	static vector<string> splitStringAt(string sentence, const char delim);
+	static ToDoData * stringToData(const string str);
 	static string dataToString(ToDoData * data);
 	static bool stringToBool(string value);
 

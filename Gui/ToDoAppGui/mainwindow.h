@@ -48,12 +48,15 @@ public slots:
 	void onSaveAll();
 	void onSaveTo();
 
+	void onShowChecked(bool checked);
+
 	void onAddItem();
 
 private:
     Ui::MainWindow *ui;
     vector<ToDoDatabase *> m_databases;
     int m_curDatabaseIndex;
+	bool m_showCheckedItems;
     //hash_map<string, int> m_idDictionary;
 };
 

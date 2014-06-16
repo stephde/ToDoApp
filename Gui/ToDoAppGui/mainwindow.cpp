@@ -12,14 +12,21 @@ MainWindow::MainWindow(QWidget *parent) :
         //alert could not load
         ;
 
+	//Category events
 	QObject::connect(ui->lineEditCategory, SIGNAL(textChanged(QString)), this, SLOT(onCategoryNameChanged(QString)));
 	QObject::connect(ui->buttonNext, SIGNAL(clicked()), this, SLOT(onNextCategory()));
 	QObject::connect(ui->buttonPrevious, SIGNAL(clicked()), this, SLOT(onPrevCategory()));
 	
-	QObject::connect(ui->actionSave, SIGNAL(clicked()), this, SLOT(onSave()));
-	QObject::connect(ui->actionSaveTo, SIGNAL(clicked()), this, SLOT(onSaveTo()));
-	QObject::connect(ui->actionSaveAll, SIGNAL(clicked()), this, SLOT(onSaveAll()));
+	//ToDoApp events
+	QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
+	QObject::connect(ui->actionSaveTo, SIGNAL(triggered()), this, SLOT(onSaveTo()));
+	QObject::connect(ui->actionSaveAll, SIGNAL(triggered()), this, SLOT(onSaveAll()));
+	QObject::connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(onSaveAll()));
 
+	//Settings events
+	QObject::connect(ui->actionShowChecked, SIGNAL(toggled(bool)), this, SLOT(onShowChecked(bool)));
+
+	//Other
 	QObject::connect(ui->buttonAddItem, SIGNAL(clicked()), this, SLOT(onAddItem()));
 }
 
@@ -152,6 +159,11 @@ void MainWindow::changeActiveCategoryTo(int index)
 }
 
 
+/****
+		static methods
+
+****/
+
 QFrame* MainWindow::createItemFrom(ToDoData * data)
 {
 	return MainWindow::createItem(data->getTitle(), 
@@ -187,6 +199,7 @@ QFrame* MainWindow::createItem(string title, string description, bool done)
 	return frame;
 }
 
+
 /****
 		Signals
 
@@ -213,7 +226,6 @@ void MainWindow::onPrevCategory()
 		changeActiveCategoryTo(m_databases.size() - 1);
 }
 
-
 void MainWindow::onSave()
 {
 	m_databases.at(m_curDatabaseIndex)->saveData();
@@ -231,6 +243,16 @@ void MainWindow::onSaveAll()
 		m_databases.at(i)->saveData();
 }
 
+void MainWindow::onShowChecked(bool checked)
+{
+	m_showCheckedItems = checked;
+
+	/***
+		hide all checked items.
+		update view.
+	***/
+	ui->scrollAreaItems->update();
+}
 
 void MainWindow::onAddItem()
 {

@@ -23,20 +23,22 @@ ToDoDatabase::~ToDoDatabase(void)
 
 }
 
-int ToDoDatabase::getEntryCount(){
+int ToDoDatabase::getEntryCount() const
+{
 	return m_dataVec.size();
 }
 
-void ToDoDatabase::add(ToDoData * data){
+void ToDoDatabase::add(ToDoData * data)
+{
 	m_dataVec.push_back(data);
 }
 
-ToDoData * ToDoDatabase::getEntryAt(int index)
+ToDoData * ToDoDatabase::getEntryAt(int index) const
 {
 	return m_dataVec.at(index);
 }
 
-vector<ToDoData *> ToDoDatabase::getAllEntries()
+vector<ToDoData *> ToDoDatabase::getAllEntries() const
 {
 	return m_dataVec;
 }
@@ -51,7 +53,7 @@ void ToDoDatabase::removeAllEntries()
 	m_dataVec.clear();
 }
 
-string ToDoDatabase::getPath()
+string ToDoDatabase::getPath() const
 {
 	return m_path;
 }
@@ -61,7 +63,7 @@ void ToDoDatabase::setPath(string path)
 	m_path = path;
 }
 
-string ToDoDatabase::getName()
+string ToDoDatabase::getName() const
 {
 	return m_name;
 }
@@ -73,25 +75,12 @@ void ToDoDatabase::setName(string name)
 
 string ToDoDatabase::extractNameFromPath(string path)
 {
-	vector<string> pathParts = ToDoDatabase::splitStringAt(path, '/');
+	vector<string> pathParts = ToDoData::splitStringAt(path, '/');
 
 	if(pathParts.size() > 0)
-		return ToDoDatabase::splitStringAt(pathParts.back().c_str(), '.').begin()->c_str();
+		return ToDoData::splitStringAt(pathParts.back().c_str(), '.').begin()->c_str();
 
 	return DEFAULTNAME;
-}
-
-vector<string> ToDoDatabase::splitStringAt(string sentence, char delim)
-{
-	vector<string> vec;
-
-	stringstream sstream(sentence);
-	string item;
-
-	while(getline(sstream, item, delim))
-		vec.push_back(item);
-
-	return vec;
 }
 
 
@@ -146,14 +135,14 @@ bool ToDoDatabase::loadDataFrom(fstream stream)
 
 bool ToDoDatabase::saveData()
 {
-	return saveDataTo(m_path + m_name + ".txt");
+	return saveDataTo(m_path + m_name + ToDoDatabase::getFileExtension());
 }
 
 bool ToDoDatabase::saveDataTo(string path)
 {
 	string line;
 	fstream file;
-	file.open(path, ios::app);
+	file.open(path, fstream::out);
 
 	if(file.is_open()){
 		cout << "Saving to file at: " << path << endl;
