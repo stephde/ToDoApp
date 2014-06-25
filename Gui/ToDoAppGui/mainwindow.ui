@@ -246,14 +246,14 @@
     <property name="title">
      <string>Category</string>
     </property>
-    <widget class="QMenu" name="menuChoose_Category">
+    <widget class="QMenu" name="menuChooseCategory">
      <property name="title">
       <string>Choose Category</string>
      </property>
      <addaction name="actionStandard_Category"/>
     </widget>
-    <addaction name="actionAdd_Category"/>
-    <addaction name="menuChoose_Category"/>
+    <addaction name="actionAddCategory"/>
+    <addaction name="menuChooseCategory"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -329,7 +329,7 @@
     <string>By priority</string>
    </property>
   </action>
-  <action name="actionAdd_Category">
+  <action name="actionAddCategory">
    <property name="text">
     <string>Add Category</string>
    </property>

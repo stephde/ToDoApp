@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->actionSaveAll, SIGNAL(triggered()), this, SLOT(onSaveAll()));
 	QObject::connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(onSaveAll()));
 
+	//Category menu events
+	QObject::connect(ui->actionAddCategory, SIGNAL(triggered()), this, SLOT(onAddCategory()));
+	QObject::connect(ui->menuChooseCategory, SIGNAL(aboutToShow()), this, SLOT(onChooseCategory()));
+	QObject::connect(ui->menuChooseCategory, SIGNAL(aboutToHide()), this, SLOT(onHideChooseCategory()));
+
 	//Settings events
 	QObject::connect(ui->actionShowChecked, SIGNAL(toggled(bool)), this, SLOT(onShowChecked(bool)));
 
@@ -109,7 +114,12 @@ void MainWindow::loadItems()
 
 	for(int i=0; i< data.size(); i++)
 	{
-		addItemForData(data.at(i));
+		if(!m_showCheckedItems)
+		{
+			if(!data.at(i)->isDone())
+				addItemForData(data.at(i));
+		}else
+			addItemForData(data.at(i));
 	}
 
 	//add spacer
@@ -156,6 +166,17 @@ void MainWindow::changeActiveCategoryTo(int index)
 	ui->lineEditCategory->setText(m_databases.at(index)->getName().c_str());
 	//loadITems
 	loadItems();
+}
+
+int MainWindow::getCategoryIndexForName(string name)
+{
+	for(int i=0;i < m_databases.size(); i++)
+	{
+		if(m_databases.at(i)->getName().compare(name) == 0)
+			return i;
+	}
+
+	return -1;
 }
 
 
@@ -243,6 +264,39 @@ void MainWindow::onSaveAll()
 		m_databases.at(i)->saveData();
 }
 
+void MainWindow::onAddCategory()
+{
+	cout << "add some new category";
+}
+
+void MainWindow::onChooseCategory()
+{
+	//iterate over categories and add an action for each
+	for(int i=0; i<m_databases.size(); i++)
+	{
+		QAction * newAction = new QAction(QString::fromStdString(m_databases.at(i)->getName()), ui->menuChooseCategory);
+		
+		//connect onclick with some function
+		//WHATS WRONG HERE!?
+		QObject::connect(newAction, SIGNAL(triggered()), this, SLOT(onCategoryChoosen()));
+
+		ui->menuChooseCategory->addAction(newAction);
+	}
+}
+
+void MainWindow::onHideChooseCategory()
+{
+	ui->menuChooseCategory->clear();
+}
+
+void MainWindow::onCategoryChoosen()
+{
+	int index = getCategoryIndexForName(dynamic_cast<QAction*>(sender())->text().toStdString());
+	
+	if(index >= 0)
+		changeActiveCategoryTo(index);
+}
+
 void MainWindow::onShowChecked(bool checked)
 {
 	m_showCheckedItems = checked;
@@ -251,6 +305,7 @@ void MainWindow::onShowChecked(bool checked)
 		hide all checked items.
 		update view.
 	***/
+	loadItems();
 	ui->scrollAreaItems->update();
 }
 
