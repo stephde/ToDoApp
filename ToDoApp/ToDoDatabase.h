@@ -23,6 +23,7 @@ public:
 	vector<ToDoData *> getAllEntries() const;
 	void removeEntryAt(int index);
 	void removeAllEntries();
+	void removeAllUncheckedEntries();
 	bool loadData();
 	bool loadDataFrom(string path);
 	bool loadDataFrom(fstream stream);

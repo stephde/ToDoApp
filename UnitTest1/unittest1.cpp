@@ -86,6 +86,18 @@ namespace UnitTest1
 			Assert::AreEqual(0, tddb->getEntryCount());
 		}
 
+		TEST_METHOD(TestRemoveAllUnchecked)
+		{
+			ToDoDatabase * tddb = new ToDoDatabase();
+			tddb->add(new ToDoData("Title", "Description", true));
+			tddb->add(new ToDoData("Title2", "Description2", true));
+			tddb->add(new ToDoData("Title3", "Description3", false));
+
+			tddb->removeAllUncheckedEntries();
+
+			Assert::AreEqual(2, tddb->getEntryCount());
+		}
+
 		TEST_METHOD(TestStringToData)
 		{			
 			time_t t = time(NULL);

@@ -53,6 +53,15 @@ void ToDoDatabase::removeAllEntries()
 	m_dataVec.clear();
 }
 
+void ToDoDatabase::removeAllUncheckedEntries()
+{
+	for(int i=0; i<m_dataVec.size(); i++)
+	{
+		if(!m_dataVec.at(i)->isDone())
+			m_dataVec.erase(m_dataVec.begin()+i);
+	}
+}
+
 string ToDoDatabase::getPath() const
 {
 	return m_path;

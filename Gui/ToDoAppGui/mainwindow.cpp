@@ -139,7 +139,11 @@ void MainWindow::saveItemsToCurDatabase()
 {
 	ToDoDatabase * curDB = m_databases.at(m_curDatabaseIndex);
 
-	curDB->removeAllEntries();
+	if(m_showCheckedItems)
+		curDB->removeAllEntries();
+	else
+		curDB->removeAllUncheckedEntries();
+
 	QLayout * layout = ui->scrollAreaWidgetContents->layout();
 	for(int i=0; i< layout->count(); i++)
 	{
@@ -182,7 +186,6 @@ int MainWindow::getCategoryIndexForName(string name)
 
 /****
 		static methods
-
 ****/
 
 QFrame* MainWindow::createItemFrom(ToDoData * data)
@@ -222,8 +225,7 @@ QFrame* MainWindow::createItem(string title, string description, bool done)
 
 
 /****
-		Signals
-
+		Slots
 ****/
 
 void MainWindow::onCategoryNameChanged(QString name)
